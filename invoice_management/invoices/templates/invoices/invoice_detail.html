@@ -1,0 +1,19 @@
+<!-- invoices/templates/invoice_detail.html -->
+{% extends 'invoices/base.html' %}
+
+{% block content %}
+    <h2>Invoice Detail for {{ customer.name }}</h2>
+    <p>Invoice ID: {{ invoice.id }}</p>
+    <p>Quantity: {{ invoice.quantity }}</p>
+    <p>Description: {{ invoice.description }}</p>
+    <p>Rate: {{ invoice.rate }}</p>
+    <p>Amount: {{ invoice.amount }}</p>
+
+    <a href="{% url 'edit_invoice' customer_id=invoice.customer.id invoice_id=invoice.id %}">Edit Invoice</a>
+    <a href="{% url 'delete_invoice' customer_id=invoice.customer.id invoice_id=invoice.id %}">Delete Invoice</a>
+    
+    <!-- Add other fields as needed -->
+
+    <a href="{% url 'customer_detail' customer.id %}">Back to Customer Detail</a>
+{% endblock %}
+

@@ -1,0 +1,12 @@
+<!-- invoices/templates/invoices/edit_invoice.html -->
+{% extends 'invoices/base.html' %}
+
+{% block content %}
+    <h2>Edit Invoice - Invoice {{ invoice.id }}</h2>
+
+    <form method="post" action="{% url 'edit_invoice' customer_id=invoice.customer.id invoice_id=invoice.id %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save Changes</button>
+    </form>
+{% endblock %}
