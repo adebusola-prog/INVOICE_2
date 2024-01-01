@@ -1,0 +1,21 @@
+<!-- invoices/templates/create_invoice.html -->
+{% extends 'invoices/base.html' %}
+
+{% block content %}
+    <h2>Create Invoice for {{ customer.name }}</h2>
+    <form method="post" action="{% url 'create_invoice' customer.id %}">
+        {% csrf_token %}
+        {{ invoice_form.as_p }}
+        
+        <div id="invoice-details-container">
+            <div class="invoice-details-row">
+                {{ details_form.quantity }}
+                {{ details_form.description }}
+                {{ details_form.rate }}
+                {{ details_form.amount }}
+
+            </div>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}
