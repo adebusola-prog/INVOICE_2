@@ -1,21 +1,96 @@
-<!-- invoices/templates/create_invoice.html -->
-{% extends 'invoices/base.html' %}
-
 {% block content %}
-    <h2>Create Invoice for {{ customer.name }}</h2>
-    <form method="post" action="{% url 'create_invoice' customer.id %}">
-        {% csrf_token %}
-        {{ invoice_form.as_p }}
-        
-        <div id="invoice-details-container">
-            <div class="invoice-details-row">
-                {{ details_form.quantity }}
-                {{ details_form.description }}
-                {{ details_form.rate }}
-                {{ details_form.amount }}
+  <h2>Create Invoice for {{ customer.name }}</h2>
+  <form method="post" action="">
+    {% csrf_token %}
 
-            </div>
+    <div id="form_set1">
+      {% for form in invoice_formset.forms %}
+        {{form.non_field_errors}}
+        {{form.errors}}
+        <table class='no_error'>
+          {{ form.as_p }}
+        </table>
+      {% endfor %}
+
+      <div id="empty_form1" style="display:none">
+        <table class='no_error'>
+          {{ invoice_formset.empty_form.as_p }}
+        </table>
+      </div>
+    </div>
+
+    <button type="button" value="Add More" id="add_more1">Add More</button>
+
+    <div id="deposit_form_set">
+      {% for form in deposit_formset.forms %}
+        {{form.non_field_errors}}
+        {{form.errors}}
+        <table class='no_error'>
+          {{ form.as_p }}
+        </table>
+      {% endfor %}
+
+      <div id="empty_form2" style="display:none">
+        <table class='no_error'>
+          {{ deposit_formset.empty_form.as_p }}
+        </table>
+      </div>
+    </div>
+
+    <button type="button" value="Add More" id="add_more2">Add More</button>
+
+    <div id="balance_form_set">
+        {% for form in balance_formset.forms %}
+          {{form.non_field_errors}}
+          {{form.errors}}
+          <table class='no_error'>
+            {{ form.as_p }}
+          </table>
+        {% endfor %}
+  
+        <div id="empty_form3" style="display:none">
+          <table class='no_error'>
+            {{ balance_formset.empty_form.as_p }}
+          </table>
         </div>
-        <button type="submit">Submit</button>
-    </form>
+      </div>
+  
+      <button type="button" value="Add More" id="add_more3">Add More</button>
+
+    <div id="total_subtotal_form_set">
+      {% for form in total_subtotal_formset.forms %}
+        {{ form.non_field_errors }}
+        {{ form.errors }}
+        <table class='no_error'>
+          {{ form.as_p }}
+        </table>
+      {% endfor %}
+
+    <button type="submit">Create Invoice</button>
+  </form>
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+  <script>
+    $('#add_more1').click(function () {
+      var form_idx = $('#id_invoice_formset-TOTAL_FORMS').val();
+      var form = $('#empty_form1').html().replace(/__prefix__/g, form_idx);
+      $('#form_set1').append(form);
+      $('#id_invoice_formset-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+    });
+
+    $('#add_more2').click(function () {
+      var form_idx = $('#id_deposit_formset-TOTAL_FORMS').val();
+      var form = $('#empty_form2').html().replace(/__prefix__/g, form_idx);
+      $('#deposit_form_set').append(form);
+      $('#id_deposit_formset-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+    });
+
+    $('#add_more3').click(function () {
+      var form_idx = $('#id_balance_formset-TOTAL_FORMS').val();
+      var form = $('#empty_form3').html().replace(/__prefix__/g, form_idx);
+      $('#balance_form_set').append(form);
+      $('#id_balance_formset-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+    });
+  </script>
 {% endblock %}

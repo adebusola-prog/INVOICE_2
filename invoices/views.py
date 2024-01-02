@@ -1,7 +1,8 @@
 # invoices/views.py
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views import View
 from .models import Customer, Invoice
-from .forms import CustomerForm, InvoiceForm
+from .forms import CustomerForm, InvoiceForm, InvoiceFormSet, TotalSubtotalFormSet,DepositFormSet, BalanceFormSet
 
 
 #def create_customer(request):
@@ -50,8 +51,6 @@ def delete_customer(request, customer_id):
 
 
 
-
-
 def create_invoice(request, customer_id):
     customer = get_object_or_404(Customer, pk=customer_id)
     
@@ -74,6 +73,50 @@ def create_invoice(request, customer_id):
        # details_form = InvoiceDetailsForm()
 
     return render(request, 'invoices/create_invoice.html', {'invoice_form': invoice_form, 'customer': customer})
+
+
+
+class InvoiceCreateView(View):
+    template_name = 'invoices/create_invoice.html'
+
+    def get(self, request, *args, **kwargs):
+        invoice_formset = InvoiceFormSet(queryset=Invoice.objects.none())
+        deposit_formset = DepositFormSet(queryset=Invoice.objects.none())
+        balance_formset = BalanceFormSet(queryset=Invoice.objects.none())
+        total_subtotal_formset = TotalSubtotalFormSet(queryset=Invoice.objects.none())
+
+        return render(request, self.template_name, {
+            'invoice_formset': invoice_formset,
+            'deposit_formset': deposit_formset,
+            'balance_formset': balance_formset,
+            'total_subtotal_formset': total_subtotal_formset,
+            'title': 'Create Invoice'
+        })
+
+    def post(self, request, *args, **kwargs):
+        invoice_formset = InvoiceFormSet(request.POST)
+        deposit_formset = DepositFormSet(request.POST)
+        balance_formset = BalanceFormSet(request.POST)
+        total_subtotal_formset = TotalSubtotalFormSet(request.POST)
+
+        if (
+            invoice_formset.is_valid() and
+            deposit_formset.is_valid() and
+            balance_formset.is_valid() and
+            total_subtotal_formset.is_valid()
+        ):
+            # Your existing logic for saving instances
+
+            return redirect('success')
+
+        return render(request, self.template_name, {
+            'invoice_formset': invoice_formset,
+            'deposit_formset': deposit_formset,
+            'balance_formset': balance_formset,
+            'total_subtotal_formset': total_subtotal_formset,
+            'title': 'Create Invoice'
+        })
+
 
 
 def invoice_detail(request, customer_id, invoice_id):
