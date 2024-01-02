@@ -22,8 +22,10 @@
             </li>
         {% endfor %}
     </ul>
+
+    <a href="{% url 'create_invoice' customer.id %}">Create New Invoice</a>
 {% endblock %}
 
 
 
-<a href="{% url 'invoice_detail' customer.id invoice.id %}">View Details</a>
+<!-- <a href="{% url 'invoice_detail' customer.id invoice.id %}">View Details</a> -->
